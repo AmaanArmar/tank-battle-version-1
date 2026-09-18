@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#171b2d">
+  <title>Tank Battle Version 1</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #f5f1e8;
+      background: #121525;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, #343451 0, #121525 48%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .card {
+      background: rgba(30, 34, 57, 0.94);
+      border: 1px solid #424762;
+      border-radius: 22px;
+      box-shadow: 0 18px 55px #080a13aa;
+    }
+
+    .auth-card {
+      width: min(430px, calc(100% - 32px));
+      margin: 7vh auto;
+      padding: 32px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 35px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #eea83f;
+      color: #241d1e;
+      font-size: 25px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .brand p {
+      margin: 4px 0;
+      color: #a8aec2;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .auth-card h2 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .muted {
+      color: #a8aec2;
+      line-height: 1.55;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0;
+      color: #cdd0db;
+      font-size: 12px;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-top: 7px;
+      padding: 13px;
+      border: 1px solid #454b67;
+      border-radius: 10px;
+      outline: 0;
+      background: #15192c;
+      color: white;
+    }
+
+    input:focus {
+      border-color: #eea83f;
+    }
+
+    .primary {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 10px;
+      background: #eea83f;
+      color: #241d1e;
+      font-weight: 800;
+    }
+
+    .primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .big {
+      padding: 16px;
+      font-size: 16px;
+    }
+
+    .link-button {
+      width: 100%;
+      margin-top: 18px;
+      background: transparent;
+      color: #f0b967;
+    }
+
+    .form-message {
+      min-height: 20px;
+      color: #ff9e8b;
+      font-size: 13px;
+    }
+
+    .topbar,
+    .gamebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px max(22px, calc((100vw - 1120px) / 2));
+      border-bottom: 1px solid #333850;
+      background: #15192aee;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .ghost {
+      background: transparent;
+      color: #c5c8d6;
+    }
+
+    .compact {
+      margin: 0;
+    }
+
+    .compact .brand-mark {
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+    }
+
+    .compact h1 {
+      font-size: 14px;
+    }
+
+    .lobby-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 18px;
+      max-width: 1120px;
+      margin: 35px auto;
+      padding: 0 22px;
+    }
+
+    .hero {
+      min-height: 270px;
+      padding: 38px;
+    }
+
+    .hero h2 {
+      margin: 8px 0;
+      font-size: 40px;
+    }
+
+    .hero .primary {
+      width: auto;
+      margin-top: 18px;
+    }
+
+    .eyebrow {
+      color: #eea83f;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .hint {
+      color: #747b98;
+      font-size: 12px;
+    }
+
+    .stats,
+    .tank-card {
+      padding: 26px;
+    }
+
+    .stats h3,
+    .tank-card h3 {
+      margin-top: 0;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px 10px;
+    }
+
+    .stat-grid div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-grid strong {
+      color: white;
+      font-size: 26px;
+    }
+
+    .stat-grid span {
+      color: #9299b2;
+      font-size: 11px;
+    }
+
+    .tank-card {
+      display: flex;
+      grid-column: span 2;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tank-preview {
+      display: grid;
+      place-items: center;
+      width: 170px;
+      height: 150px;
+      border-radius: 14px;
+      background: #c9a46d22;
+    }
+
+    .tank-preview img {
+      max-width: 125px;
+      max-height: 140px;
+      object-fit: contain;
+    }
+
+    .game-shell {
+      min-height: 100vh;
+      background: #15192a;
+    }
+
+    .gamebar {
+      padding: 12px 20px;
+      font-size: 13px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      width: min(100%, 1100px);
+      margin: auto;
+    }
+
+    #arena {
+      display: block;
+      width: 100%;
+      height: calc(100vh - 145px);
+      min-height: 430px;
+      background: #c89a60;
+    }
+
+    .toast {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      padding: 10px 17px;
+      border-radius: 20px;
+      background: #20263bdd;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateX(-50%);
+      transition: 0.25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      max-width: 1100px;
+      margin: auto;
+      padding: 12px 20px;
+    }
+
+    .joystick {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      touch-action: none;
+      border: 2px solid #ffffff44;
+      border-radius: 50%;
+      background: #ffffff22;
+    }
+
+    .stick {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #eea83f;
+    }
+
+    .action-hint {
+      color: #9fa6bf;
+      font-size: 11px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .fire {
+      width: 75px;
+      height: 55px;
+      border-radius: 14px;
+      background: #d95747;
+      color: white;
+      font-weight: 900;
+    }
+
+    .fire:active {
+      transform: scale(0.94);
+    }
+
+    @media (max-width: 700px) {
+      .lobby-grid {
+        display: block;
+        margin-top: 20px;
+      }
+
+      .lobby-grid > * {
+        margin-bottom: 14px;
+      }
+
+      .hero {
+        padding: 25px;
+      }
+
+      .hero h2 {
+        font-size: 32px;
+      }
+
+      .tank-card {
+        display: flex;
+      }
+
+      .gamebar {
+        font-size: 11px;
+      }
+
+      #arena {
+        height: calc(100vh - 185px);
+        min-height: 380px;
+      }
+
+      .controls {
+        padding: 10px 15px;
+      }
+
+      .action-hint {
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main id="app">
+
+    <section id="auth" class="card auth-card">
+      <div class="brand">
+        <span class="brand-mark">✦</span>
+        <div>
+          <h1>TANK BATTLE</h1>
+          <p>VERSION 1 · DESERT ARENA</p>
+        </div>
+      </div>
+
+      <h2 id="auth-title">Enter the arena</h2>
+      <p class="muted">
+        Create an account or sign in to save your tank, beans and achievements on this device.
+      </p>
+
+      <form id="auth-form">
+        <label>
+          Username
+          <input id="username" required minlength="2" maxlength="18"
+                 autocomplete="username" placeholder="commander">
+        </label>
+
+        <label>
+          Password
+          <input id="password" type="password" required minlength="4"
+                 autocomplete="current-password" placeholder="••••">
+        </label>
+
+        <button class="primary" type="submit" id="auth-submit">
+          Create account
+        </button>
+      </form>
+
+      <button class="link-button" id="auth-switch" type="button">
+        Already have an account? Sign in
+      </button>
+
+      <p class="form-message" id="auth-message"></p>
+    </section>
+
+    <section id="lobby" class="hidden">
+      <header class="topbar">
+        <div class="brand compact">
+          <span class="brand-mark">✦</span>
+          <div>
+            <h1>TANK BATTLE</h1>
+            <p>VERSION 1</p>
+          </div>
+        </div>
+
+        <div class="profile">
+          <b id="player-name"></b>
+          <button class="ghost" id="logout">Log out</button>
+        </div>
+      </header>
+
+      <div class="lobby-grid">
+        <section class="card hero">
+          <p class="eyebrow">WELCOME, COMMANDER</p>
+          <h2>Ready for battle?</h2>
+          <p class="muted">
+            Drive your assigned tank through the desert, collect beans and destroy the practice targets.
+          </p>
+          <button class="primary big" id="start-game">
+            ▶ Start a match
+          </button>
+          <p class="hint">Your progress is saved automatically on this device.</p>
+        </section>
+
+        <section class="card stats">
+          <h3>Commander record</h3>
+
+          <div class="stat-grid">
+            <div><strong id="s-matches">0</strong><span>Matches</span></div>
+            <div><strong id="s-wins">0</strong><span>Wins</span></div>
+            <div><strong id="s-beans">0</strong><span>Beans</span></div>
+            <div><strong id="s-losses">0</strong><span>Losses</span></div>
+            <div><strong id="s-second">0</strong><span>2nd place</span></div>
+            <div><strong id="s-third">0</strong><span>3rd place</span></div>
+          </div>
+        </section>
+
+        <section class="card tank-card">
+          <div>
+            <p class="eyebrow">YOUR ASSIGNED TANK</p>
+            <h3 id="tank-name">Scout</h3>
+            <p class="muted">Each account receives a tank skin.</p>
+          </div>
+
+          <div class="tank-preview" id="tank-preview"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="game" class="hidden game-shell">
+      <header class="gamebar">
+        <button class="ghost" id="back-lobby">← Lobby</button>
+        <b>DESERT ARENA</b>
+        <span>
+          Beans: <strong id="game-beans">0</strong>
+          · Time: <strong id="timer">90</strong>
+        </span>
+      </header>
+
+      <div class="canvas-wrap">
+        <canvas id="arena"></canvas>
+        <div class="toast" id="toast"></div>
+      </div>
+
+      <div class="controls">
+        <div class="joystick" id="joystick">
+          <div class="stick"></div>
+        </div>
+
+        <div class="action-hint">
+          <b>PC:</b> WASD / arrows move · Space, Enter or E fire<br>
+          <b>Mobile:</b> drag joystick · tap FIRE
+        </div>
+
+        <button class="fire" id="fire">FIRE</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const $ = selector => document.querySelector(selector);
+
+    /*
+      These are the image files already uploaded to your repository.
+      If your files have different names, change the names below.
+    */
+    const tankFiles = [
+      "1789753478466.png",
+      "1789754119940.png",
+      "1789754149838.png",
+      "1789754168962.png"
+    ];
+
+    const tankNames = [
+      "Sand Sentinel",
+      "Olive Raider",
+      "Camo Vanguard",
+      "Arctic Guardian"
+    ];
+
+    let users = JSON.parse(localStorage.getItem("tankBattleUsers") || "{}");
+    let currentUser = null;
+    let authMode = "signup";
+    let keys = {};
+    let game = null;
+
+    function saveUsers() {
+      localStorage.setItem("tankBattleUsers", JSON.stringify(users));
+    }
+
+    function showScreen(screen) {
+      ["auth", "lobby", "game"].forEach(id => {
+        $("#" + id).classList.toggle("hidden", id !== screen);
+      });
+    }
+
+    function message(text, color = "") {
+      const element = $("#auth-message");
+      element.textContent = text;
+      element.style.color = color;
+    }
+
+    $("#auth-switch").addEventListener("click", () => {
+      authMode = authMode === "signup" ? "login" : "signup";
+
+      $("#auth-title").textContent =
+        authMode === "signup" ? "Enter the arena" : "Welcome back";
+
+      $("#auth-submit").textContent =
+        authMode === "signup" ? "Create account" : "Sign in";
+
+      $("#auth-switch").textContent =
+        authMode === "signup"
+          ? "Already have an account? Sign in"
+          : "Need an account? Create one";
+
+      message("");
+    });
+
+    $("#auth-form").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const username = $("#username").value.trim().toLowerCase();
+      const password = $("#password").value;
+
+      if (authMode === "signup") {
+        if (users[username]) {
+          message("That commander name is already taken.");
+          return;
+        }
+
+        const accountNumber = Object.keys(users).length;
+
+        users[username] = {
+          username,
+          password,
+          tank: accountNumber % tankFiles.length,
+          stats: {
+            matches: 0,
+            wins: 0,
+            losses: 0,
+            second: 0,
+            third: 0,
+            beans: 0
+          }
+        };
+
+        saveUsers();
+      } else {
+        if (!users[username] || users[username].password !== password) {
+          message("Incorrect username or password.");
+          return;
+        }
+      }
+
+      currentUser = username;
+      renderLobby();
+      showScreen("lobby");
+    });
+
+    function renderLobby() {
+      const account = users[currentUser];
+      const stats = account.stats;
+
+      $("#player-name").textContent = account.username;
+
+      $("#s-matches").textContent = stats.matches;
+      $("#s-wins").textContent = stats.wins;
+      $("#s-beans").textContent = stats.beans;
+      $("#s-losses").textContent = stats.losses;
+      $("#s-second").textContent = stats.second;
+      $("#s-third").textContent = stats.third;
+
+      $("#tank-name").textContent = tankNames[account.tank];
+
+      $("#tank-preview").innerHTML =
+        `<img src="${tankFiles[account.tank]}" alt="${tankNames[account.tank]}">`;
+    }
+
+    $("#logout").addEventListener("click", () => {
+      currentUser = null;
+      showScreen("auth");
+    });
+
+    $("#start-game").addEventListener("click", () => {
+      showScreen("game");
+      startGame();
+    });
+
+    $("#back-lobby").addEventListener("click", () => {
+      finishGame(false);
+      renderLobby();
+      showScreen("lobby");
+    });
+
+    const canvas = $("#arena");
+    const context = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      const rectangle = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+
+      canvas.width = rectangle.width * ratio;
+      canvas.height = rectangle.height * ratio;
+
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    function startGame() {
+      resizeCanvas();
+
+      game = {
+        x: canvas.clientWidth / 2,
+        y: canvas.clientHeight / 2,
+        angle: -Math.PI / 2,
+        beans: 0,
+        time: 90,
+        lastFrame: performance.now(),
+        reload: 0,
+        obstacles: [],
+        targets: []
+      };
+
+      for (let i = 0; i < 15; i++) {
+        game.obstacles.push({
+          x: 40 + Math.random() * (canvas.clientWidth - 80),
+          y: 50 + Math.random() * (canvas.clientHeight - 110),
+          radius: 18 + Math.random() * 20,
+          type: i % 3 === 0 ? "bush" : "rock"
+        });
+      }
+
+      for (let i = 0; i < 8; i++) {
+        game.targets.push({
+          x: 45 + Math.random() * (canvas.clientWidth - 90),
+          y: 45 + Math.random() * (canvas.clientHeight - 100),
+          alive: true
+        });
+      }
+
+      $("#game-beans").textContent = "0";
+      $("#timer").textContent = "90";
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function isBlocked(x, y) {
+      return game.obstacles.some(obstacle => {
+        return Math.hypot(x - obstacle.x, y - obstacle.y)
+          < obstacle.radius + 18;
+      });
+    }
+
+    function fire() {
+      if (!game || game.reload > 0) return;
+
+      game.reload = 0.3;
+
+      const bulletX = game.x + Math.cos(game.angle) * 28;
+      const bulletY = game.y + Math.sin(game.angle) * 28;
+
+      game.targets.forEach(target => {
+        if (
+          target.alive &&
+          Math.hypot(bulletX - target.x, bulletY - target.y) < 42
+        ) {
+          target.alive = false;
+          game.beans += 5;
+          showToast("+5 beans");
+        }
+      });
+
+      $("#game-beans").textContent = game.beans;
+    }
+
+    function showToast(text) {
+      const element = $("#toast");
+      element.textContent = text;
+      element.classList.add("show");
+
+      setTimeout(() => {
+        element.classList.remove("show");
+      }, 700);
+    }
+
+    function gameLoop(now) {
+      if (!game) return;
+
+      const delta = Math.min(0.04, (now - game.lastFrame) / 1000);
+
+      game.lastFrame = now;
+      game.time -= delta;
+      game.reload = Math.max(0, game.reload - delta);
+
+      let horizontal =
+        (keys.d || keys.ArrowRight ? 1 : 0) -
+        (keys.a || keys.ArrowLeft ? 1 : 0);
+
+      let vertical =
+        (keys.s || keys.ArrowDown ? 1 : 0) -
+        (keys.w || keys.ArrowUp ? 1 : 0);
+
+      if (horizontal || vertical) {
+        const length = Math.hypot(horizontal, vertical);
+
+        horizontal /= length;
+        vertical /= length;
+
+        game.angle = Math.atan2(vertical, horizontal);
+
+        const nextX = game.x + horizontal * 145 * delta;
+        const nextY = game.y + vertical * 145 * delta;
+
+        if (
+          nextX > 20 &&
+          nextX < canvas.clientWidth - 20 &&
+          !isBlocked(nextX, game.y)
+        ) {
+          game.x = nextX;
+        }
+
+        if (
+          nextY > 30 &&
+          nextY < canvas.clientHeight - 25 &&
+          !isBlocked(game.x, nextY)
+        ) {
+          game.y = nextY;
+        }
+      }
+
+      drawGame();
+
+      $("#timer").textContent = Math.max(0, Math.ceil(game.time));
+
+      if (game.time <= 0) {
+        finishGame(true);
+      } else {
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    function drawGame() {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+
+      context.fillStyle = "#c89a60";
+      context.fillRect(0, 0, width, height);
+
+      context.globalAlpha = 0.12;
+      context.strokeStyle = "#6c4528";
+
+      for (let i = 0; i < 100; i++) {
+        context.beginPath();
+        context.arc(
+          (i * 97) % width,
+          (i * 53) % height,
+          20 + (i % 5) * 5,
+          0,
+          Math.PI
+        );
+        context.stroke();
+      }
+
+      context.globalAlpha = 1;
+
+      game.obstacles.forEach(obstacle => {
+        context.save();
+        context.translate(obstacle.x, obstacle.y);
+
+        context.fillStyle =
+          obstacle.type === "bush" ? "#39733b" : "#77726a";
+
+        context.beginPath();
+        context.arc(0, 0, obstacle.radius, 0, Math.PI * 2);
+        context.fill();
+
+        context.strokeStyle = "#3e372e";
+        context.stroke();
+
+        if (obstacle.type === "bush") {
+          context.fillStyle = "#6caa4c";
+
+          context.beginPath();
+          context.arc(-7, -5, 7, 0, Math.PI * 2);
+          context.arc(8, -3, 8, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        context.restore();
+      });
+
+      game.targets.forEach(target => {
+        if (!target.alive) return;
+
+        context.fillStyle = "#e7c34f";
+        context.beginPath();
+        context.arc(target.x, target.y, 10, 0, Math.PI * 2);
+        context.fill();
+
+        context.fillStyle = "#573e22";
+        context.fillRect(target.x - 3, target.y - 3, 6, 6);
+      });
+
+      context.save();
+      context.translate(game.x, game.y);
+      context.rotate(game.angle + Math.PI / 2);
+
+      context.fillStyle = "#273b31";
+      context.fillRect(-17, -21, 34, 42);
+
+      context.fillStyle = "#eea83f";
+      context.fillRect(-12, -14, 24, 25);
+
+      context.fillStyle = "#75613e";
+      context.beginPath();
+      context.arc(0, 0, 10, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = "#333";
+      context.fillRect(-3, -38, 6, 29);
+
+      context.restore

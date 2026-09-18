@@ -871,31 +871,98 @@ function renderLobby() {
         context.arc(target.x, target.y, 10, 0, Math.PI * 2);
         context.fill();
 
-        context.fillStyle = "#573e22";
-        context.fillRect(target.x - 3, target.y - 3, 6, 6);
-      });
-
-      context.save();
-      context.translate(game.x, game.y);
-      context.rotate(game.angle + Math.PI / 2);
-
-      context.fillStyle = "#273b31";
-      context.fillRect(-17, -21, 34, 42);
-
-      context.fillStyle = "#eea83f";
-      context.fillRect(-12, -14, 24, 25);
-
-      context.fillStyle = "#75613e";
-      context.beginPath();
-      context.arc(0, 0, 10, 0, Math.PI * 2);
-      context.fill();
-
-      context.fillStyle = "#333";
+              context.fillStyle = "#333";
       context.fillRect(-3, -38, 6, 29);
 
-      context.restore 
       context.restore();
+    }
+
+    function finishGame(countResult) {
+      if (!game) return;
+
+      if (countResult) {
+        const stats = users[currentUser].stats;
+
+        stats.matches++;
+        stats.beans += game.beans;
+
+        if (game.beans >= 20) {
+          stats.wins++;
+        } else {
+          stats.losses++;
+        }
+
+        saveUsers();
       }
-      </script>
-   </body>
+
+      game = null;
+    }
+
+    window.addEventListener("keydown", event => {
+      keys[event.key] = true;
+
+      if (
+        event.key === " " ||
+        event.key === "Enter" ||
+        event.key.toLowerCase() === "e"
+      ) {
+        event.preventDefault();
+        fire();
+      }
+    });
+
+    window.addEventListener("keyup", event => {
+      keys[event.key] = false;
+    });
+
+    $("#fire").addEventListener("pointerdown", event => {
+      event.preventDefault();
+      fire();
+    });
+
+    const joystick = $("#joystick");
+    const stick = document.querySelector(".stick");
+
+    function moveJoystick(event) {
+      const rectangle = joystick.getBoundingClientRect();
+
+      const x = event.clientX - rectangle.left - rectangle.width / 2;
+      const y = event.clientY - rectangle.top - rectangle.height / 2;
+
+      const distance = Math.min(27, Math.hypot(x, y));
+      const angle = Math.atan2(y, x);
+
+      stick.style.transform =
+        `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+
+      keys.w = y < -8;
+      keys.s = y > 8;
+      keys.a = x < -8;
+      keys.d = x > 8;
+    }
+
+    function stopJoystick() {
+      keys.w = false;
+      keys.a = false;
+      keys.s = false;
+      keys.d = false;
+      stick.style.transform = "";
+    }
+
+    joystick.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      joystick.setPointerCapture(event.pointerId);
+      moveJoystick(event);
+    });
+
+    joystick.addEventListener("pointermove", event => {
+      event.preventDefault();
+      moveJoystick(event);
+    });
+
+    joystick.addEventListener("pointerup", stopJoystick);
+    joystick.addEventListener("pointercancel", stopJoystick);
+    joystick.addEventListener("lostpointercapture", stopJoystick);
+  </script>
+</body>
 </html>

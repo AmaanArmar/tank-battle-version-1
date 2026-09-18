@@ -630,8 +630,7 @@
       renderLobby();
       showScreen("lobby");
     });
-
-    function renderLobby() {
+function renderLobby() {
       const account = users[currentUser];
       const stats = account.stats;
 
@@ -894,4 +893,9 @@
       context.fillStyle = "#333";
       context.fillRect(-3, -38, 6, 29);
 
-      context.restore
+      context.restore 
+      context.restore();
+      }
+  </script>
+</body>
+901: </html>
